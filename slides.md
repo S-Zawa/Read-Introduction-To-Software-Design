@@ -190,6 +190,7 @@ public class ContractManager
     // 契約を締結する
     public void Conclude()
     {
+        // 省略
         int amountIncludingTax =
             CalculateAmountIncludingTax(amountExcludingTax, salesTaxRate);
         ContractAmount = new ContractAmount();
