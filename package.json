@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "slidev --open",
+    "build": "slidev build",
+    "export": "slidev export"
+  },
+  "dependencies": {
+    "@slidev/cli": "^0.31.2",
+    "@slidev/theme-default": "*",
+    "@slidev/theme-seriph": "*",
+    "playwright-chromium": "^1.13.1"
+  },
+  "name": "slidev-example",
+  "devDependencies": {
+    "@iconify-json/logos": "^1.1.5",
+    "@iconify-json/twemoji": "^1.1.4"
+  }
+}
