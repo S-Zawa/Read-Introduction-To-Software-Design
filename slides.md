@@ -1,10 +1,10 @@
 ---
 theme: seriph # https://sli.dev/themes/gallery.html
-title: SlidevのMarkdown記法サンプル
-download: false
+title: 「良いコード/悪いコードで学ぶ設計入門」<br>を読んで
+download: true
 lineNumbers: true
-background: https://source.unsplash.com/collection/94734566/1920x1080
-class: 'text-center'
+background:
+class: "text-center"
 ---
 
 # 「良いコード/悪いコードで学ぶ設計入門」<br>を読んで
@@ -16,7 +16,7 @@ layout: intro
 
 ---
 
-# 0章
+# 0 章
 
 はじめに
 
@@ -25,13 +25,15 @@ layout: intro
 ## 0. はじめに
 
 ### きっかけ
-- GW中に「良いコード／悪いコードで学ぶ設計入門」を読みました
+
+- GW 中に「良いコード／悪いコードで学ぶ設計入門」を読みました
 - まだ途中ですが順に皆さんに内容をかいつまんで展開したいと思います
 
-- https://note.com/minodriven/n/n12af8005899f
+- <https://note.com/minodriven/n/n12af8005899f>
 - <https://www.amazon.co.jp/dp/4297127830?tag=note0e2a-22&linkCode=ogi&th=1&psc=1>
 
 ### 対象読者
+
 - オブジェクト指向プログラミング言語の基礎知識はあるものの、設計がよくわからない/自信がない方、これから設計をしっかり学び始めようと考えている方
 
 ---
@@ -52,8 +54,8 @@ layout: intro
 
 ---
 
+SW 開発で以下の経験はあるあるではないでしょうか？
 
-SW開発で以下の経験はあるあるではないでしょうか？
 - どこかのコードを変更すると、別の箇所でバグが発生した
 - 変更の影響があるそうな箇所をあちらこちら探し回らなければならなくなった
 - コードを読んでいるだけで日が暮れてしまった
@@ -68,17 +70,21 @@ SWの成長を阻害する設計や実装上の問題を「悪魔」と例え、
 
 ---
 layout: intro
+
 ---
 
-# 1章
+# 1 章
 
 悪しき構造の弊害を知覚する
 
 ---
+
 設計を蔑ろにすると起こる弊害
+
 - コードを読み解くのに時間がかかる
 - バグを埋め込みやすくなる
 - 悪しき構造が更に悪しき構造を誘発する
+
 ---
 
 ## 1.1. 意味不明な命名
@@ -100,7 +106,7 @@ class MemoryStateManager
 }
 ```
 
-- 型名を表すInt、メモリ制御を表すMemoryやFlagなど、プログラミング、コンピュータ用語に基づいた技術ベースでの命名を技術駆動命名と呼びます
+- 型名を表す Int、メモリ制御を表す Memory や Flag など、プログラミング、コンピュータ用語に基づいた技術ベースでの命名を技術駆動命名と呼びます
 
 ---
 
@@ -116,6 +122,7 @@ class Class01
     void Method003();
 }
 ```
+
 - クラスやメソッドに対して番号付けで命名することを連番命名と呼びます
 
 ---
@@ -144,14 +151,12 @@ class Class01
     }
 ```
 
-- 上記はRPGにおける魔法発動までの条件を実装した例です
-- ネストしているとコードの見通しが悪くなりどこまでがif文の処理ロジックなのか読み解きのが難しくなります
+- 上記は RPG における魔法発動までの条件を実装した例です
+- ネストしているとコードの見通しが悪くなりどこまでが if 文の処理ロジックなのか読み解きのが難しくなります
 
 ---
 
 ## 1.3. さまざまな悪魔を招きやすいデータクラス
-
-
 
 - データクラスは単純な構造でありながら様々な悪魔を招きやすいです
 - 業務契約を扱うサービスにて契約金額を扱う仕様を例にします
@@ -165,11 +170,13 @@ public class ContractAmount
     public decimal SalesTaxRate;    // 消費税率
 }
 ```
-- 税込み金額と消費税率をpublicなインスタンス変数として持ち、自由にデータの出し入れが可能な構造です
+
+- 税込み金額と消費税率を public なインスタンス変数として持ち、自由にデータの出し入れが可能な構造です
 - データの入れ物だけでなく税込み金額を計算するロジックが当然必要になります
+
 ---
 
-### ContractManagerに書かれる金額計算ロジック
+### ContractManager に書かれる金額計算ロジック
 
 ```csharp
 public class ContractManager
@@ -199,7 +206,6 @@ public class ContractManager
         // 省略
     }
 }
-
 ```
 
 ---
@@ -254,6 +260,7 @@ public class ContractManager
 - 重複コードが多く実装されている場合、仕様変更時にすべての重複コードを変更しなければならず、修正漏れが生じバグとなります
 
 ### 1.3.4. 可読性低下
+
 - 関連するコード同士が分散していると重複コードも含めすべてを探し出すのに膨大な時間が必要となります
 
 ---
@@ -261,39 +268,37 @@ public class ContractManager
 ### 1.3.5. 生焼けオブジェクト
 
 ```csharp
-
-        ContractAmount amount = new ContractAmount();
-        Console.WriteLine(amount.SalesTaxRate.ToString());
-
+    ContractAmount amount = new ContractAmount();
+    Console.WriteLine(amount.SalesTaxRate.ToString());
 ```
-- 上記のコードを実行するとヌルポが発生します
-- ContractAmountが初期化の必要なクラスであることを利用者側が知らないとバグが生じてしまう不完全なクラス（生焼けオブジェクト）です
 
+- ~~上記のコードを実行するとヌルポが発生します~~
+  - C#だと SalesTaxRate が decimal だと初期値の 0、string だとヌルリになります
+- ContractAmount は初期化の必要なクラスであること、未初期化状態が発生しうるクラスであることを利用者側が知らないとバグが生じてしまう不完全なクラス（生焼けオブジェクト）です
 
 ---
 
 ### 1.3.6. 不正値の混入
 
 不正とは仕様として正しくない状態を指します
-- 注文数がマイナスになっている
-- ゲームにおいてHPの値が最大値を超えてしまっている
 
+- 注文数がマイナスになっている
+- ゲームにおいて HP の値が最大値を超えてしまっている
 
 ### 不正値を混入可能
+
 - 負数の消費税率を代入するなどデータクラスは不整地を与えることが容易にできてしまいます
 
 ```csharp
-
-        ContractAmount amount = new ContractAmount();
-        amount.SalesTaxRate = new decimal(-0.1);
-
+    ContractAmount amount = new ContractAmount();
+    amount.SalesTaxRate = new decimal(-0.1);
 ```
+
 - 不正値が混入しないようにデータクラスの利用側でバリデーションロジックを実装することがありますが、こちらも税込み計算ロジック同様に重複コードの発生原因となります
 
 ---
 
-### 今までの話をまとめてできたContractAmountクラス
-
+### 今までの話をまとめてできた ContractAmount クラス
 
 ```csharp
     public class ContractAmount
@@ -328,5 +333,245 @@ public class ContractManager
             return decimal.ToInt32(amountIncludingTax);
         }
     }
-
 ```
+
+---
+layout: intro
+
+---
+
+# 2 章
+
+設計の初歩
+
+---
+
+- クラス設計の前に設計の基本的な考えからから入ります。
+- 簡単なコードを例に、 `どういったことをするのが設計なのか理解することを目的とします。`
+
+<!--
+肩慣らしとして変数やメソッドといった小さな単位の設計を取り扱います
+-->
+
+---
+
+# 2.1. 省略せずに意図が伝わる名前を設計する
+
+```csharp
+    int d = 0;
+    d = p1 + p2;
+    d = d - ((d1 + d2) / 2);
+    if (d < 0)
+    {
+        d = 0;
+    }
+```
+
+- 何かの計算になっているが、何を計算しているのかがわからない。
+
+---
+
+- 実はゲームのダメージ計算のロジックで各変数下記の通りとなります。
+
+| 変数 | 意味                     |
+| :--- | :----------------------- |
+| d    | ダメージ量               |
+| p1   | プレイヤー本体の攻撃力   |
+| p1   | プレイヤーの武器の攻撃力 |
+| d1   | 敵本来の防御力           |
+| d2   | 敵の防具の防御力         |
+
+---
+
+意図がわかる変数名に改善します
+
+```csharp
+    int damageAmount = 0;
+    damageAmount = playerPower + playerWeaponPower; // ①
+    damageAmount = damageAmount - ((enemyDodyDefence    enemyArmorDefence) / 2); // ②
+    if (damageAmount < 0)
+    {
+        damageAmount = 0;
+    }
+```
+
+- 上記で見やすくはなりましたが課題があります
+
+<div v-click class="text-xl p-2">
+ダメージ量damageAmountに何度か値が代入されています
+</div>
+
+---
+
+# 2.2.変数を使い回さない、目的ごとの変数を用意する
+
+- 複雑な計算処理では計算の途中の結果を同じ変数に代入しがちです。
+  - 上記を再代入と呼びます。
+- コードの途中で変数の用途が変わってしまい、バグを埋め込んでしまう可能性があります。
+
+```csharp
+    int damageAmount = 0;
+    damageAmount = playerPower + playerWeaponPower; // ①
+    damageAmount = damageAmount - ((enemyBodyDefence enemyArmorDefence) / 2); // ②
+    if (damageAmount < 0)
+    {
+        damageAmount = 0;
+    }
+```
+
+- ① で damageAmount に代入されているのはプレイヤーの攻撃力の総量です。
+- ② は敵の防御力の総量を計算しています。
+
+---
+
+```csharp
+    int totalPlayerAttackPower = playerPower playerWeaponPower;
+    int totalEnemyDefence = enemyBodyDefence enemyArmorDefence;
+    int damageAmount = totalPlayerAttackPower (totalEnemyDefence / 2);
+    if (damageAmount < 0)
+    {
+        damageAmount = 0;
+    }
+```
+
+- 全体としてどんな値を扱っているのか、ある値を算出するのにどんな値を使っているのか、関係性がわかりやすくなりました。
+
+---
+
+# 2.3.ベタ書きせず、意味のあるまとまりでメソッド化
+
+- 攻撃力、防御力の総量の計算や計算結果を格納する変数を分けましたが、一連の処理の流れはすべてベタ書きになっています。
+- 意味のあるまとまりでロジックをまとめメソッドとして実装しましょう。
+
+```csharp
+    private int SumUpPlayerAttackPower(int playerArmPower, intplayerWeaponPower)
+    {
+        return playerArmPower + playerWeaponPower;
+    }
+    private int SumUpEnemyDefence(int enemyBodyDefence, intenemyArmorDefence)
+    {
+        return enemyBodyDefence + enemyArmorDefence;
+    }
+    int EstimateDamage(int totalPlayerAttackPower, inttotalEnemyDefence)
+    {
+        int damageAmount = totalPlayerAttackPower -(totalEnemyDefence / 2);
+        if (damageAmount < 0)
+        {
+            damageAmount = 0;
+        }
+        return damageAmount;
+    }
+```
+
+<!--
+どこからどこまでがなんの処理かわかりにくい、計算ロジックが更に複雑になると攻撃力の計算に防御力が混ざり込むなど、違うものが紛れ込むといったことも発生する可能性があります
+-->
+
+---
+
+- 先程のメソッドを呼び出す形に整理します。
+
+```csharp
+    int totalPlayerAttackPower = SumUpPlayerAttackPow(playerBodyPower, playerWeaponPower);
+    int totalEnemyDefence = SumUpEnemyDefen(enemyBodyDefence, enemyArmorDefence);
+    int damageAmount = EstimateDama(totalPlayerAttackPower, totalEnemyDefence);
+```
+
+- 当初と同じ実行結果が得られるロジックですが見た目や構造がずいぶんと変わりました。
+
+```csharp
+    int d = 0;
+    d = p1 + p2;
+    d = d - ((d1 + d2) / 2);
+    if (d < 0)
+    {
+        d = 0;
+    }
+```
+
+- このように保守しやすい、変更しやすいような変数名、ロジックに工夫を凝らすことも設計になります。
+
+---
+
+# 2.4. 関係し合うデータとロジックをクラスにまとめる
+
+- ゲームを例に戦闘が伴うゲームでは主人公の HP があります。
+- これがローカル変数など何らかの変数で定義されているとします。
+
+```csharp
+    int hitPoint;
+```
+
+- ダメージを受けて HP が減少するロジックが必要になり、どこかに実装されるでしょう。
+
+```csharp
+    hitPoint = hitPoint - damageAmount;
+    if (hitPoint < 0)
+    {
+        hitPoint = 0;
+    }
+```
+
+- そのうち回復アイテムでの HP 回復ロジックもどこかに実装されるでしょう。
+
+```csharp
+    hitPoint = hitPoint + recoveryAmount;
+    if (999 < hitPoint)
+    {
+        hitPoint = 999;
+    }
+```
+
+---
+
+- こうした変数や変数を操作するロジックはゲームに限らず、バラバラに書かれがちです。
+- 小さなプログラムですと問題ないですが大規模になればなるほど関係するロジックを探し回るだでも時間がかかります。
+- また、変数 hitPoint に負数が入ってしまうなどの不正値が混入してしまうかもしれません。
+
+<div v-click class="text-xl p-2">
+上記の問題を解決するのがクラスです。クラスはデータをインスタンス変数として持ち、インスタンス変数を操作するメソッドをまとめることができます。
+</div>
+
+---
+
+```csharp
+    public class HitPoint
+    {
+        private static readonly int Min = 0;
+        private static readonly int Max = 999;
+        public int Value { get; }
+        public HitPoint(int value)
+        {
+            if (value < Min)
+            {
+                throw new ArgumentException();
+            }
+            if (Max < value)
+            {
+                throw new ArgumentException();
+            }
+            this.Value = value;
+        }
+        public HitPoint Damage(int damageAmount)
+        {
+            int damaged = Value - damageAmount;
+            int corrected = damaged < Min ? Min : damaged;
+            return new HitPoint(corrected);
+        }
+        public HitPoint Recover(int recoveryAmount)
+        {
+            int recovered = Value + recoveryAmount;
+            int corrected = Max < recovered ? Max : recovered;
+            return new HitPoint(corrected);
+        }
+```
+
+---
+
+- ダメージは damage メソッド、回復は recover メソッドというように HitPoint クラスには HP に関するロジックが備わりました。
+- コンストラクタでは 0~999 の範囲外は不正な値として弾くロジックにし、不正な値が紛れ込みバグにつながらないようなクラス構造になっています。
+
+<!--
+以降はより本格的な設計になります。
+クラスの設計方法と背景となる考え方をより詳細に解説します。
+-->
