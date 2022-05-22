@@ -143,8 +143,8 @@ class Class01
         // 行動可能判定
         if(member.CanAct()){
             // MP残存判定
-            if(magic.ConstMagicPoint <= member.ConstMagicPoint){
-                member.ConsumeMagicPoint(magic.ConstMagicPoint);
+            if(magic.CostMagicPoint <= member.CostMagicPoint){
+                member.ConsumeMagicPoint(magic.CostMagicPoint);
                 member.Chant(magic);
             }
         }
